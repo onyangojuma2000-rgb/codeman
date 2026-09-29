@@ -1,2 +1,3 @@
 # codeman
-just cose
+just vibe code
+
