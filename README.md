@@ -1,3 +1,3 @@
 # codeman
-just vibe code
+Working on a project
 
