@@ -1,0 +1,27 @@
+# 🌤️ City Weather Dashboard
+
+A responsive web app that displays current weather, a 3-day forecast, and country information for any city.
+
+## Features
+- Search for cities worldwide.
+- View current weather and a 3-day forecast.
+- Display country flag, capital, and population.
+- Loading indicator and error handling.
+- Mobile-friendly design.
+
+## Tools
+- HTML, CSS, JavaScript
+- OpenWeatherMap API
+- REST Countries API
+
+## Setup
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/onyangojuma2000-rgb/codeman.git
+   ```
+2. Add your OpenWeatherMap API key in `index.html`.
+3. Open `index.html` using VS Code Live Server.
+
+## Author
+ Felix Juma  
+[GitHub Profile](https://github.com/onyangojuma2000-rgb)
