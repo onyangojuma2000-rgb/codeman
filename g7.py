@@ -1,16 +1,21 @@
+import os
 import requests
 
-response = requests.get(
-    'https://api.restcountries.com/countries/v5?memberships.g7=1',
-    headers={'Authorization': 'Bearer rc_live_373575f97ad64d3cabf4a116daa0cc8d'}
-)
+api_key = os.getenv("RESTCOUNTRIES_API_KEY")
+headers = {"Authorization": api_key} if api_key else {}
+url = "https://api.restcountries.com/countries/v5?memberships.g7=1"
+response = requests.get(url, headers=headers, timeout=15)
 
-data = response.json()
 if response.status_code == 200:
     data = response.json()
-    country = data[0]
-
-    name = country["name"]["common"]
-print(type(data))
-
-p
+    if isinstance(data, list):
+        countries = [country["name"]["common"] for country in data if "name" in country and "common" in country["name"]]
+        print(f"Found {len(countries)} G7 countries.")
+        for name in countries:
+            print(name)
+    else:
+        print("Unexpected response format:")
+        print(data)
+else:
+    print("Request failed. Status code:", response.status_code)
+    print(response.text)
