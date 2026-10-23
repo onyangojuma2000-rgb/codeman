@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Country Info</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #1F4E79; }
+    #result { background: #f7f9fc; border: 1px solid #d0dff0; border-radius: 8px; padding: 20px; margin-top: 20px; }
+    button { background: #2E75B6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #1F4E79; }
+  </style>
+</head>
+<body>
+
+<h1>Country Info</h1>
+<input type="text" id="countryInput" placeholder="Enter a country name" style="padding:8px; font-size:16px; width:250px;">
+<input type="password" id="apiKeyInput" placeholder="REST Countries API key" autocomplete="off" style="padding:8px; font-size:16px; width:250px; margin-top:10px;">
+<button onclick="loadCountry()">Search</button>
+<div id="result">Enter a country name above and click Search.</div>
+
+<script>
+async function loadCountry() {
+  const countryInput = document.getElementById("countryInput");
+  const apiKeyInput = document.getElementById("apiKeyInput");
+  const result = document.getElementById("result");
+  const country = countryInput.value.trim();
+  const apiKey = apiKeyInput.value.trim();
+
+  if (!country) {
+    result.textContent = "Please enter a country name.";
+    return;
+  }
+
+  result.textContent = "Loading...";
+
+  try {
+    const useV5 = Boolean(apiKey);
+    let url;
+    const headers = {};
+
+    if (useV5) {
+      url = new URL("https://api.restcountries.com/countries/v5/search");
+      url.searchParams.set("q", country);
+      url.searchParams.set("response_fields", "name,capital,population,region,flags");
+      headers.Authorization = `Bearer ${apiKey}`;
+    } else {
+      const endpoint = `https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`;
+      url = new URL(endpoint);
+      url.searchParams.set("fields", "name,capital,population,region,flags");
+    }
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      throw new Error(
+        response.status === 401 || response.status === 403
+          ? "The API key was rejected. Check your key and try again."
+          : response.status === 404
+            ? "Country not found. Check the spelling and try again."
+            : `The country service returned an error (${response.status}). Please try again.`
+      );
+    }
+
+    const payload = await response.json();
+    const countries = Array.isArray(payload) ? payload : Array.isArray(payload.data) ? payload.data : [];
+    const info = countries[0] || null;
+
+    if (!info) {
+      throw new Error("Country information was not returned. Please try another search.");
+    }
+
+    const nameData = info.names || info.name;
+    const countryName =
+      (nameData && typeof nameData === "object" && (nameData.common || nameData.official)) ||
+      (typeof nameData === "string" && nameData) ||
+      "Country";
+
+    const flagData = info.flags || info.flag;
+    const flagUrl = flagData && (flagData.png || flagData.svg || flagData.url_png || flagData.url_svg);
+
+    const heading = document.createElement("h2");
+    const headingText = `${flagData && flagData.emoji ? `${flagData.emoji} ` : ""}${countryName}`;
+    heading.textContent = headingText;
+
+    if (flagUrl) {
+      const flag = document.createElement("img");
+      flag.src = flagUrl;
+      flag.alt = `${countryName} flag`;
+      flag.style.width = "36px";
+      flag.style.marginRight = "8px";
+      heading.prepend(flag);
+    }
+
+    const capitals = Array.isArray(info.capitals)
+      ? info.capitals.map(capital => typeof capital === "string" ? capital : capital.name).filter(Boolean)
+      : Array.isArray(info.capital)
+        ? info.capital.filter(Boolean)
+        : [];
+
+    const details = [
+      ["Capital", capitals.length ? capitals.join(", ") : "N/A"],
+      ["Region", info.region || "N/A"],
+      ["Population", Number.isFinite(info.population) ? info.population.toLocaleString() : "N/A"]
+    ];
+
+    result.replaceChildren(heading);
+    for (const [label, value] of details) {
+      const paragraph = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = `${label}:`;
+      paragraph.append(strong, ` ${value}`);
+      result.append(paragraph);
+    }
+  } catch (error) {
+    result.textContent = error instanceof TypeError
+      ? "Unable to connect to the country service. Check your internet connection and try again."
+      : error.message;
+  }
+}
+</script>
+
+</body>
+</html>
