@@ -1,116 +1,53 @@
-<<<<<<< HEAD
+# Matatu SACCO FAQ Assistant
 
-# Dairy Co-op Price Checker
-
-A simple Python command-line tool for calculating the amount owed to dairy farmers.
-
-## Requirements
-- Python 3.9 or newer
-- No additional packages required
-
-## How to run
-
-Open a terminal in this project folder and run:
-
-```bash
-python dairy_calculator.py
-```
-
-## Update the milk price
-
-Open `price.txt` and replace the existing number with the new buying price per litre.
-
-Example:
-
-```text
-58.5
-```
-
-Save the file and run the program again.
-
-## Calculation
-
-Total owed = Litres supplied × Current price per litre
-
-## Current limitations
-
-This version calculates the amount owed but does not save daily milk deliveries, farmer records, or payment history.
-=======
-<<<<<<< HEAD
-# codeman
-Working on a project
-
-#app.py
-# Carpentry Workshop Daily Production Log
-
-A simple Streamlit app for recording daily chair production and material usage.
-
-## Run locally
-
-1. Install Python.
-2. Open Command Prompt/PowerShell in this folder.
-3. Run:
-
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-The app lets you:
-- Add daily workshop records
-- Calculate total chairs, timber, nails and paint
-- Calculate daily averages
-- View a production chart
-- Download records as CSV
-- Reset the sample data
-=======
-# Kenyan Business Currency Tracker
-
-A Python application that converts Kenyan Shillings (KES) to US Dollars (USD), Euros (EUR), and British Pounds (GBP) using ExchangeRate-API.
+A Python AI assistant powered by **Claude Haiku 4.5** that helps a Thika Matatu SACCO secretary answer common member questions about balances, meetings, and membership fees.
 
 ## Features
-- Converts KES to USD, EUR, and GBP.
-- Retrieves current exchange rates from the API.
-- Validates user input and handles common errors.
-- Uses environment variables to protect API credentials.
-
-## Requirements
-- Python 3.10+
-- ExchangeRate-API key
+- Answers common questions clearly and consistently.
+- Recognizes different ways of asking the same question.
+- Includes six sample questions for testing.
 
 ## Setup
 
-1. Install dependencies:
+Install dependencies:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+python -m pip install anthropic python-dotenv
+```
 
-2. Create a `.env` file using `.env.example` as a template.
-3. Add your API key:
+Create a `.env` file and add your Anthropic API key:
 
-   ```text
-   EXCHANGE_RATE_API_KEY=your_api_key
-   ```
+```text
+ANTHROPIC_API_KEY=your_api_key_here
+```
 
 ## Run
 
 ```bash
-python currency_tracker.py
+python sacco_faq_assistant.py
 ```
 
-Enter an amount in KES to view the converted values.
+Type a question, `test` to run sample questions, or `quit` to exit.
 
-## Security
-Never share or commit your `.env` file or API key to GitHub.
+## Example Interactions
 
-**Note:** Exchange rates may change. Results depend on the rates provided by the API when the application runs.
-link explaininng project structure: kenyan_business_currency_tracker/
-│
-├── currency_tracker.py
-├── README.md
-├── requirements.txt
-├── .env.example
-└── .gitignore
->>>>>>> b3ba95a (Readme file for currency tracker)
->>>>>>> 97512283f667febf9b9fd6ee943ad86edec540e3
+**Member:** What is my balance?
+
+**Assistant:** Please contact the SACCO treasurer to confirm your balance.
+
+**Member:** When is our next meeting?
+
+**Assistant:** The demonstration schedule lists Saturday, 7 November 2026, at 10:00 AM at the SACCO office in Thika. Please confirm with the secretary.
+
+**Member:** How much is the monthly fee?
+
+**Assistant:** The demonstration monthly membership fee is KES 500. Please confirm the amount with the secretary before paying.
+
+## Important Notes
+- Replace demonstration fees (KES 2,000 joining; KES 500 monthly) and meeting details with SACCO-approved information.
+- Individual balances must be verified by the treasurer.
+- Requires internet access and a valid Anthropic API key; API charges may apply.
+- Runs in the terminal; automatic WhatsApp integration is not included.
+- Keep `.env` private and exclude it from GitHub.
+
+**Technology:** Python · Claude Haiku 4.5 · Anthropic API
