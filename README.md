@@ -1,107 +1,84 @@
-# Matatu SACCO FAQ Assistant
+# Kiambu Poultry Egg Production Tracker
 
-A Python AI assistant powered by **Claude Haiku 4.5** that helps a Thika Matatu SACCO secretary answer common member questions about balances, meetings, and membership fees.
+A simple Flask REST API that helps poultry farmers record daily egg production across multiple sheds and automatically calculate production totals.
 
 ## Features
-- Answers common questions clearly and consistently.
-- Recognizes different ways of asking the same question.
-- Includes six sample questions for testing.
 
-## Setup
+- Record daily egg production by shed.
+- Retrieve all production records.
+- Calculate total eggs produced.
+- View production totals per shed.
+- Validate dates, shed names, and egg counts.
+
+## Tools
+
+- Python
+- Flask
+- REST API
+- JSON
+
+## Installation
+
+```bash
+git clone <your-repository-url>
+cd poultry-egg-tracker
+
+python -m venv venv
+```
+
+Activate the virtual environment:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
 Install dependencies:
 
 ```bash
-python -m pip install anthropic python-dotenv
+pip install Flask
 ```
 
-Create a `.env` file and add your Anthropic API key:
-
-```text
-ANTHROPIC_API_KEY=your_api_key_here
-```
-
-## Run
+Run the application:
 
 ```bash
-python sacco_faq_assistant.py
+python app.py
 ```
 
-Type a question, `test` to run sample questions, or `quit` to exit.
+API base URL: `http://127.0.0.1:5000`
 
-## Example Interactions
+## API Endpoints
 
-**Member:** What is my balance?
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/eggs` | Record daily egg production |
+| GET | `/api/eggs` | Retrieve records and production totals |
 
-**Assistant:** Please contact the SACCO treasurer to confirm your balance.
+### Sample POST Request
 
-**Member:** When is our next meeting?
-
-**Assistant:** The demonstration schedule lists Saturday, 7 November 2026, at 10:00 AM at the SACCO office in Thika. Please confirm with the secretary.
-
-**Member:** How much is the monthly fee?
-
-**Assistant:** The demonstration monthly membership fee is KES 500. Please confirm the amount with the secretary before paying.
-
-## Important Notes
-- Replace demonstration fees (KES 2,000 joining; KES 500 monthly) and meeting details with SACCO-approved information.
-- Individual balances must be verified by the treasurer.
-- Requires internet access and a valid Anthropic API key; API charges may apply.
-- Runs in the terminal; automatic WhatsApp integration is not included.
-- Keep `.env` private and exclude it from GitHub.
-
-**Technology:** Python · Claude Haiku 4.5 · Anthropic API
-
-# Matatu SACCO FAQ Assistant
-
-A Python AI assistant powered by **Claude Haiku 4.5** that helps a Thika Matatu SACCO secretary answer common member questions about balances, meetings, and membership fees.
-
-## Features
-- Answers common questions clearly and consistently.
-- Recognizes different ways of asking the same question.
-- Includes six sample questions for testing.
-
-## Setup
-
-Install dependencies:
-
-```bash
-python -m pip install anthropic python-dotenv
+```json
+{
+    "shed": "Shed A",
+    "date": "2026-11-04",
+    "count": 120
+}
 ```
 
-Create a `.env` file and add your Anthropic API key:
+## Pricing Estimate
 
-```text
-ANTHROPIC_API_KEY=your_api_key_here
-```
+| Service | Proposed charge |
+|---|---:|
+| Development and deployment (one-time) | **KES 15,000** |
+| Monthly maintenance and support | **KES 2,000** |
 
-## Run
+*The one-time fee covers setup, testing, and deployment. Monthly support covers basic monitoring, troubleshooting, and minor maintenance. Hosting fees and major feature upgrades are charged separately.*
 
-```bash
-python sacco_faq_assistant.py
-```
+## Storage Limitation
 
-Type a question, `test` to run sample questions, or `quit` to exit.
+Records are stored temporarily in memory and are lost when the application restarts. Database integration is recommended for permanent storage.
 
-## Example Interactions
+## Future Improvements
 
-**Member:** What is my balance?
-
-**Assistant:** Please contact the SACCO treasurer to confirm your balance.
-
-**Member:** When is our next meeting?
-
-**Assistant:** The demonstration schedule lists Saturday, 7 November 2026, at 10:00 AM at the SACCO office in Thika. Please confirm with the secretary.
-
-**Member:** How much is the monthly fee?
-
-**Assistant:** The demonstration monthly membership fee is KES 500. Please confirm the amount with the secretary before paying.
-
-## Important Notes
-- Replace demonstration fees (KES 2,000 joining; KES 500 monthly) and meeting details with SACCO-approved information.
-- Individual balances must be verified by the treasurer.
-- Requires internet access and a valid Anthropic API key; API charges may apply.
-- Runs in the terminal; automatic WhatsApp integration is not included.
-- Keep `.env` private and exclude it from GitHub.
-
-**Technology:** Python · Claude Haiku 4.5 · Anthropic API
+- Weekly and monthly production reports.
+- Database integration.
+- Farmer-friendly dashboard.
+- Excel report exports.
