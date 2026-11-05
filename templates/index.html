@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiambu Poultry Egg Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f4f6f8;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #245c3a;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 18px;
+            padding: 11px 20px;
+            background: #245c3a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .summary div {
+            flex: 1;
+            min-width: 150px;
+            background: #e8f3eb;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .summary strong {
+            display: block;
+            font-size: 25px;
+            margin-top: 8px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: #c62828;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #245c3a;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Kiambu Poultry Egg Production Tracker</h1>
+    <p>Record and monitor daily egg production across your sheds.</p>
+
+    <section class="card">
+        <h2>Record Egg Production</h2>
+
+        <form id="egg-form">
+
+            <label for="shed">Shed Name</label>
+            <input
+                type="text"
+                id="shed"
+                placeholder="e.g. Shed A"
+                required
+            >
+
+            <label for="date">Production Date</label>
+            <input
+                type="date"
+                id="date"
+                required
+            >
+
+            <label for="count">Egg Count</label>
+            <input
+                type="number"
+                id="count"
+                min="0"
+                step="1"
+                placeholder="Enter number of eggs"
+                required
+            >
+
+            <button type="submit" id="submit-btn">
+                Submit Record
+            </button>
+
+        </form>
+
+        <p id="message" aria-live="polite"></p>
+    </section>
+
+    <section class="card">
+        <h2>Production Summary</h2>
+
+        <div class="summary">
+            <div>
+                Total Eggs
+                <strong id="total-eggs">0</strong>
+            </div>
+
+            <div>
+                Total Records
+                <strong id="total-records">0</strong>
+            </div>
+        </div>
+
+        <h2>Production by Shed</h2>
+        <div id="shed-totals">No production records yet.</div>
+    </section>
+
+    <section class="card">
+        <h2>Production Records</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Shed</th>
+                        <th>Date</th>
+                        <th>Egg Count</th>
+                        <th>Running Total</th>
+                    </tr>
+                </thead>
+
+                <tbody id="records-table">
+                    <tr>
+                        <td colspan="5">No records available.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        const form = document.getElementById("egg-form");
+        const submitBtn = document.getElementById("submit-btn");
+        const message = document.getElementById("message");
+
+        // Display all production records
+        async function loadRecords() {
+            const response = await fetch("/api/eggs");
+
+            if (!response.ok) {
+                throw new Error("Could not retrieve production records.");
+            }
+
+            const data = await response.json();
+
+            document.getElementById("total-eggs").textContent =
+                data.total_eggs;
+
+            document.getElementById("total-records").textContent =
+                data.total_records;
+
+            // Display shed totals
+            const shedTotals = document.getElementById("shed-totals");
+            shedTotals.replaceChildren();
+
+            const sheds = Object.entries(data.shed_totals);
+
+            if (sheds.length === 0) {
+                shedTotals.textContent = "No production records yet.";
+            } else {
+                sheds.forEach(([shed, total]) => {
+                    const paragraph = document.createElement("p");
+                    paragraph.textContent = `${shed}: ${total} eggs`;
+                    shedTotals.appendChild(paragraph);
+                });
+            }
+
+            // Display production table
+            const table = document.getElementById("records-table");
+            table.replaceChildren();
+
+            if (data.records.length === 0) {
+                const row = table.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 5;
+                cell.textContent = "No records available.";
+                return;
+            }
+
+            data.records.forEach(record => {
+                const row = table.insertRow();
+
+                [
+                    record.id,
+                    record.shed,
+                    record.date,
+                    record.count,
+                    record.running_total
+                ].forEach(value => {
+                    const cell = row.insertCell();
+                    cell.textContent = value;
+                });
+            });
+        }
+
+        // Submit a new production record
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const shed = document.getElementById("shed").value.trim();
+            const productionDate = document.getElementById("date").value;
+            const count = Number(document.getElementById("count").value);
+
+            if (!shed || !productionDate ||
+                !Number.isSafeInteger(count) || count < 0) {
+                message.textContent = "Please enter valid production details.";
+                message.className = "error";
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+            message.textContent = "Saving production record...";
+            message.className = "";
+
+            try {
+                const response = await fetch("/api/eggs", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        shed: shed,
+                        date: productionDate,
+                        count: count
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || "Could not save record.");
+                }
+
+                // Refresh the table and totals without reloading the page
+                await loadRecords();
+
+                message.textContent =
+                    `Record saved successfully! Running total: ${result.running_total} eggs.`;
+
+                message.className = "success";
+
+                form.reset();
+
+            } catch (error) {
+                message.textContent = error.message ||
+                    "Something went wrong. Please try again.";
+
+                message.className = "error";
+
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit Record";
+            }
+        });
+
+        // Load existing records when the page opens
+        loadRecords().catch(error => {
+            message.textContent =
+                "Unable to load records. Check that the Flask server is running.";
+
+            message.className = "error";
+        });
+    </script>
+
+</body>
+</html>

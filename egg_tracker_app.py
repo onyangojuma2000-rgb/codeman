@@ -1,8 +1,12 @@
 
 from datetime import date
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+# Enable CORS for development
+CORS(app)
 
 # Temporary in-memory storage
 egg_records = []
@@ -15,6 +19,19 @@ def log_eggs():
     data = request.get_json(silent=True)
 
     if not data:
+@app.route("/")
+def home():
+    """Display the egg production dashboard."""
+    return render_template("index.html")
+
+
+@app.route("/api/eggs", methods=["POST"])
+def log_eggs():
+    """Record daily egg production."""
+
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
         return jsonify({"error": "A valid JSON request is required."}), 400
 
     shed = data.get("shed")
@@ -39,7 +56,7 @@ def log_eggs():
             "error": "Egg count must be a non-negative integer."
         }), 400
 
-    # Create and store production record
+    # Create production record
     record = {
         "id": len(egg_records) + 1,
         "shed": shed.strip(),
@@ -50,6 +67,9 @@ def log_eggs():
     egg_records.append(record)
 
     running_total = sum(item["count"] for item in egg_records)
+    running_total = sum(
+        item["count"] for item in egg_records
+    )
 
     return jsonify({
         "message": "Egg production recorded successfully.",
@@ -61,6 +81,7 @@ def log_eggs():
 @app.route("/api/eggs", methods=["GET"])
 def get_eggs():
     """Retrieve all egg production records and calculate totals."""
+    """Retrieve records and calculate production totals."""
 
     running_total = 0
     records_with_totals = []
@@ -71,6 +92,9 @@ def get_eggs():
 
         shed = record["shed"]
         shed_totals[shed] = shed_totals.get(shed, 0) + record["count"]
+        shed_totals[shed] = (
+            shed_totals.get(shed, 0) + record["count"]
+        )
 
         records_with_totals.append({
             **record,
