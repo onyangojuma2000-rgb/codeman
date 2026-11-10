@@ -1,0 +1,11 @@
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/IMG_4827.jpg | TO: /mnt/data/legal_document_sorter/sample_documents/Evidence/IMG_4827.jpg
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/unknown.bin | TO: /mnt/data/legal_document_sorter/sample_documents/Other/unknown.bin
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/client_email.eml | TO: /mnt/data/legal_document_sorter/sample_documents/Correspondence/client_email.eml
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/scan001.pdf | TO: /mnt/data/legal_document_sorter/sample_documents/Filings/scan001.pdf
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/old_agreement.doc | TO: /mnt/data/legal_document_sorter/sample_documents/Contracts/old_agreement.doc
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/Contract_FINAL_v3.docx | TO: /mnt/data/legal_document_sorter/sample_documents/Contracts/Contract_FINAL_v3.docx
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/meeting_notes.txt | TO: /mnt/data/legal_document_sorter/sample_documents/Correspondence/meeting_notes.txt
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/court_filing.pdf | TO: /mnt/data/legal_document_sorter/sample_documents/Filings/court_filing.pdf
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/budget.xlsx | TO: /mnt/data/legal_document_sorter/sample_documents/Other/budget.xlsx
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/evidence.jpeg | TO: /mnt/data/legal_document_sorter/sample_documents/Evidence/evidence.jpeg
+2026-11-10T04:43:23+00:00 | FROM: /mnt/data/legal_document_sorter/sample_documents/site_photo.png | TO: /mnt/data/legal_document_sorter/sample_documents/Evidence/site_photo.png

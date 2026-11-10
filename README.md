@@ -82,3 +82,48 @@ Records are stored temporarily in memory and are lost when the application resta
 - Database integration.
 - Farmer-friendly dashboard.
 - Excel report exports.
+# Legal Document Sorter
+
+A Python automation tool that organizes legal documents into folders based on file type. It helps law firms reduce manual filing time, keep documents organized, and track file movements.
+
+## File Categories
+
+| Folder | File Types |
+|---|---|
+| Contracts | `.docx`, `.doc` |
+| Evidence | `.jpg`, `.jpeg`, `.png` |
+| Filings | `.pdf` |
+| Correspondence | `.txt`, `.eml` |
+| Other | All remaining files |
+
+## How to Run
+
+Requires Python 3.10 or newer.
+
+```powershell
+python sort_documents.py "C:\path\to\your\documents"
+```
+
+The script creates the folders automatically and records every move, timestamp, original path, and destination path in `sort_log.txt`.
+
+## Testing
+
+Run the automated tests:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+Tested successfully with 11 dummy files and 2 automated tests.
+
+## Business Value
+
+- **Target users:** Small law firms and legal offices.
+- **Time saved:** Approximately 1 hour per week when sorting 200 files.
+- **Setup price:** KES 8,000 (one-time).
+
+## Technology
+
+Python, pathlib, shutil, argparse, and datetime.
+
+**Note:** Test on copies before sorting actual client documents. The tool sorts by file extension and does not upload or read document contents.
